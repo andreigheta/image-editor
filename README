@@ -1,0 +1,103 @@
+Copyright 2023 Gheta Andrei-Cristian 312CA
+
+<LOAD>
+
+Pentru inceput vom declara fisierul cu datele de intrare, iar apoi vom incerca
+sa-l deschidem. Odata deschis vom citi pe rand datele din acesta urmand sa ne 
+folosim de ele pe parcursul programului (mai putin comentariile pe care le vom
+ignora). Tinem cont si de numarul de fisiere citite.
+
+La incarcarea text/ascii citirea se va face normal, intrucat metadatele sunt
+in format ascii, deci fisierul initial va fi oricum deschis in modul read text.
+Imaginile pot fi foarte mari asa ca vom aloca dinamic o matrice in care vom
+introduce imaginea citita. Initial selectia va fi pe toata imaginea.
+
+La incarcare binara lucrurile stau putin mai diferit. Dupa ce citim metadatele
+in format text, salvam pozitia cursorului, iar apoi il deschidem in modul de
+citire binara pentru a ne continua citirea imaginii.
+
+<SELECT>
+
+Selectarea imaginii incepe prin citirea parametrilor/coordonatelor de care 
+depinde. Initial verificam ca toate copiile sa fie numere, iar apoi
+verificam si ca acestea sa fie valide. In caz ca totul merge bine, le vom copia
+in coordonatele propriu-zise.
+
+<SELECT ALL>
+
+Extindem selectia de coordonate pe intreaga poza.
+
+<HISTOGRAM>
+
+La histograma incepem prin citirea parametrilor introdusi pentru a verifica
+ca acestia sunt numere, dar si ca nu contin mai putini/multi parametri.
+Facem un vector de frecvente al numerelor din imagine, iar apoi il folosim
+pentru a calcula maximul aparitiilor pe fiecare interval. In final, aflam si
+maximul global, urmand apoi sa calculam numarul de stelute si, in final, sa
+afisam histograma.
+
+<EQUALIZE>
+
+Egalizarea pozei incepe prin a aloca un vector de frecventa de care ne vom
+folosi la calcule. Parcurgem toata imaginea si aplicam formula data in
+documentatie urmand mai apoi sa utilizam clamp pentru a limita valorile in
+intervalul [0, 255];
+
+<ROTATE>
+
+Rotirea poate fi realizata in 2 moduri: in sensul acelor de ceasornic si in
+sens trigonometric, de asemenea, poate fi pe intreaga poza sau doar pe o 
+selectie. Cele doua sunt foarte asemanatoare, singurul lucru care
+difera fiind modul in care copiem poza. 
+
+Cand e vorba de rotirea intregii imagini, initial alocam o matrice temporara
+in care rotim matricea, apoi dealocam matricea initiala, actualizam
+coordonatele si o mutam sa pointeze spre aceeasi zona de memorie ca matricea
+temporara rotita.
+
+Cand e vorba de selectie, insa, alocam o matrice temporara de dimensiunile
+selectiei, iar apoi dupa ce o rotim doar ii copiem selectia inapoi in matricea
+initiala.
+
+<CROP>
+
+Identic ca la rotate, initial incepem prin a aloca o matrice temporara. Mai
+apoi, copiem in aceasta strict selectia dupa care se face crop-ul. Dealocam
+matricea initiala, ii actualizam numarul de linii si coloane, iar apoi o 
+facem sa pointeze catre zona matricei cropate.
+
+<APPLY>
+
+Pentru a aplica filtrul, mai intai luam matricea corespunzatoare filtrului si o
+aplicam pe fiecare pixel, mai putin marginile, folosindu-ne de vecinii acestuia.
+La efectele de edge si sharpen vom aplica si functia clamp.
+
+Atunci cand aplicam filtrul pe toata imaginea tot ce trebuie sa facem este sa
+excludem toate marginile, iar apoi sa facem calculele propriu-zise dintre
+matricea filtru si mini-matricele de 3x3 prin care iteram.
+
+Cand aplicam doar pe o selectie, insa, va trebui sa verificam de fiecare data
+daca ne aflam cu selectiile pe oricare dintre margini pentru a o putea ignora
+aferent.
+
+La ambele variante de mai sus vom folosi o matrice temporara pentru a nu
+influenta calculele urmatoare, iar la final o vom copia in matricea noastra
+initiala.
+
+<SAVE>
+
+La salvarea ascii, deschidem fisierul unde vrem sa scriem informatiile in
+modul write text, iar apoi verificam ce tip are poza pentru a-i afla magic
+number-ul final dupa save. Apoi tot ceea ce facem este sa scriem in fisier
+metadatele si imaginea in sine.
+
+La salvarea binara, tot ceea ce difera este scrierea in fisier a matricei
+corespunzatoare imaginii.
+
+Cand salvam ne folosim de un buffer pentru a determina sub ce tip salvam
+imaginea.
+
+<EXIT>
+
+Inchidem programul si dealocam tot in caz ca exista ceva incarcat.
+
